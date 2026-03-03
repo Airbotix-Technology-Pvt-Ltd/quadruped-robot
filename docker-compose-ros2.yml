@@ -1,0 +1,23 @@
+services:
+  lite3_mpc:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: lite3_mpc_wbc:latest
+    container_name: lite3_mpc_worker
+    network_mode: host
+    ipc: host
+    environment:
+      - DISPLAY=${DISPLAY}
+      - ROS_DOMAIN_ID=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /home/sumit/Lite3Robot/quadruped-robot:/workspace/quadruped-robot
+      - /home/sumit/Lite3Robot/Lite3_MPC_WBC_ROS2/src:/workspace/lite3_ws/src
+      - /home/sumit/Lite3Robot/Lite3_rl_deploy_src:/workspace/Lite3_rl_deploy_src
+      - /home/sumit/Lite3Robot/Lite3_MPC_WBC_ROS2/docker/build_all.sh:/workspace/build_all.sh
+      - /home/sumit/Lite3Robot/Lite3_MPC_WBC_ROS2/docker/launch_mujoco.sh:/workspace/docker/launch_mujoco.sh
+    stdin_open: true
+    tty: true
+    working_dir: /workspace/lite3_ws
+    command: bash
