@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  quadruped_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: quadruped_robot:noetic
+    container_name: quadruped_robot_worker
+    network_mode: host
+    ipc: host
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      # Setup entrypoint to source ROS
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics,display
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      # Mount the current directory as the source folder inside a catkin workspace
+      - .:/workspace/quadruped_ws/src/quadruped_robot
+      - /etc/localtime:/etc/localtime:ro
+    stdin_open: true
+    tty: true
+    working_dir: /workspace/quadruped_ws
+    command: /bin/bash
